@@ -18,6 +18,13 @@ type YT struct {
 	cfg        *YouTrack
 }
 
+func NewClient(headers map[string]string) *Client {
+	return &Client{
+		httpClient: &http.Client{},
+		headers:    headers,
+	}
+}
+
 func (client *Client) Get(link string, response any) error {
 	return client.Request(http.MethodGet, link, nil, response)
 }
