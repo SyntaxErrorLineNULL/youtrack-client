@@ -18,6 +18,14 @@ type YT struct {
 	cfg        *YouTrack
 }
 
+func (client *Client) Get(link string, response any) error {
+	return client.Request(http.MethodGet, link, nil, response)
+}
+
+func (client *Client) Post(link string, body io.Reader, response any) error {
+	return client.Request(http.MethodPost, link, body, response)
+}
+
 func (client *Client) Request(method string, link string, body io.Reader, responseStruct any) error {
 	request, err := http.NewRequest(method, link, body)
 	if err != nil {
@@ -52,5 +60,4 @@ func (client *Client) Request(method string, link string, body io.Reader, respon
 	}
 
 	return nil
-
 }
