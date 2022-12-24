@@ -1,70 +1,62 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
-	"fmt"
 	"io"
 	"net/http"
+	"net/url"
 )
 
-type Client struct {
-	// prepared http client to make service calls
-	httpClient *http.Client
-	headers    map[string]string
+type RequestOptions struct {
+	Headers []RequestHeader
 }
 
-type YT struct {
-	httpClient *Client
-	cfg        *YouTrack
-}
-
-func NewClient(headers map[string]string) *Client {
-	return &Client{
-		httpClient: &http.Client{},
-		headers:    headers,
-	}
-}
-
-func (client *Client) Get(link string, response any) error {
-	return client.Request(http.MethodGet, link, nil, response)
-}
-
-func (client *Client) Post(link string, body io.Reader, response any) error {
-	return client.Request(http.MethodPost, link, body, response)
-}
-
-func (client *Client) Request(method string, link string, body io.Reader, responseStruct any) error {
-	request, err := http.NewRequest(method, link, body)
+func Get[T any](ctx context.Context, link *url.URL, opts RequestOptions) (T, error) {
+	var m T
+	request, err := http.NewRequestWithContext(ctx, "GET", link.String(), http.NoBody)
 	if err != nil {
-		return fmt.Errorf("new request error: %w", err)
+		return m, err
 	}
 
-	for key, value := range client.headers {
-		request.Header.Set(key, value)
+	for _, header := range opts.Headers {
+		header(request)
 	}
 
-	response, err := client.httpClient.Do(request)
+	body, err := doRequest(request)
 	if err != nil {
-		return fmt.Errorf("request error: %w", err)
+		return m, err
 	}
 
-	if response.StatusCode != http.StatusOK {
-		// what I will return ?
-	}
+	return parseJSON[T](body)
+}
 
-	bodyResponse, err := io.ReadAll(response.Body)
-	resErr := response.Body.Close()
-	if resErr != nil {
-		return fmt.Errorf("body close error: %w", resErr)
-	}
+func doRequest(r *http.Request) ([]byte, error) {
+	res, err := client.Do(r)
 	if err != nil {
-		return fmt.Errorf("read body error: %w", err)
+		return nil, err
 	}
 
-	err = json.Unmarshal(bodyResponse, &responseStruct)
+	if res.StatusCode != http.StatusOK {
+		switch res.StatusCode {
+		case 500:
+			// TODO: create error
+		}
+	}
+
+	body, err := io.ReadAll(res.Body)
+	_ = res.Body.Close()
 	if err != nil {
-		// what I will return ?
+		return nil, err
 	}
 
-	return nil
+	return body, nil
+}
+
+func parseJSON[T any](s []byte) (T, error) {
+	var r T
+	if err := json.Unmarshal(s, &r); err != nil {
+		return r, err
+	}
+	return r, nil
 }
