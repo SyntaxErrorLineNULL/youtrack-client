@@ -22,7 +22,6 @@ func loadConfig() (*YouTrack, error) {
 			config.URL = env
 		case "YOUTRACK_TOKEN":
 			config.Token = env
-
 		}
 	}
 

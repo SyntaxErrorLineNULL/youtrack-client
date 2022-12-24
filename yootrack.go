@@ -8,8 +8,8 @@ import (
 
 var (
 	once     sync.Once
-	client   *http.Client
-	endpoint = ""
+	client   *http.Client = http.DefaultClient
+	endpoint              = ""
 )
 
 // Settings yootrack client settings

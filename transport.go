@@ -1,9 +1,10 @@
 package main
 
 import (
-	"golang.org/x/time/rate"
 	"net/http"
 	"time"
+
+	"golang.org/x/time/rate"
 )
 
 type ClientTransport struct {
