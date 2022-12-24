@@ -5,7 +5,7 @@ import "net/http"
 // RequestHeader is a function that adds a header to a request.
 type RequestHeader func(req *http.Request)
 
-func addHeader(key, value string) RequestHeader {
+func AddHeader(key, value string) RequestHeader {
 	return func(req *http.Request) {
 		req.Header.Set(key, value)
 	}
