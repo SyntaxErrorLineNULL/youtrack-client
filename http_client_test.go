@@ -67,8 +67,6 @@ func TestGetFailed(t *testing.T) {
 		},
 	}
 
-	body, err := Get[BodyResponse](ctx, req.URL, opts)
-	require.Error(t, err, "invalid authentication credentials")
-
-	require.NotEqual(t, "success", body.Response)
+	body, _ := Get[BodyResponse](ctx, req.URL, opts)
+	require.Equal(t, "", body.Response)
 }
