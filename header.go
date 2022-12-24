@@ -11,11 +11,11 @@ func AddHeader(key, value string) RequestHeader {
 	}
 }
 
-// BasicAuth adds basic auth header to request.
-func BasicAuth(login, password string) RequestHeader {
+// BearerAuth adds bearer auth header to request.
+func BearerAuth(key string) RequestHeader {
 	return func(req *http.Request) {
-		if login != "" && password != "" {
-			req.SetBasicAuth(login, password)
+		if key != "" {
+			AddHeader("Authorization", "Bearer "+key)
 		}
 	}
 }

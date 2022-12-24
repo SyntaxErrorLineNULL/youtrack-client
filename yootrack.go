@@ -7,7 +7,8 @@ import (
 )
 
 var (
-	once     sync.Once
+	once sync.Once
+	// TODO: fix this
 	client   *http.Client = http.DefaultClient
 	endpoint              = ""
 )
