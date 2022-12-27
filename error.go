@@ -1,4 +1,4 @@
-package main
+package yootrack
 
 // IncorrectField This article examines an error that might happen when you try to update
 // a custom field in an issue using YouTrack REST API.

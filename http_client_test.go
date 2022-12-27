@@ -1,4 +1,4 @@
-package main
+package yootrack
 
 import (
 	"bytes"
@@ -34,7 +34,7 @@ func TestGetSuccess(t *testing.T) {
 		Headers: []RequestHeader{
 			AddHeader("Content-Type", "application/json"),
 			AddHeader("Accept-Language", "en"),
-			BasicAuth("customer_key", "customer_secret"),
+			BearerAuth("h32uid3yfg4wuhidfjeuhwy4g3y78uiwjqdenfbhrgyueiwqjkdjeh"),
 		},
 	}
 
@@ -63,7 +63,7 @@ func TestGetFailed(t *testing.T) {
 		Headers: []RequestHeader{
 			AddHeader("Content-Type", "application/json"),
 			AddHeader("Accept-Language", "en"),
-			BasicAuth("customer_key", "customer_secret"),
+			BearerAuth("bearer_key"),
 		},
 	}
 

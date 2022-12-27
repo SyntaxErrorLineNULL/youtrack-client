@@ -1,4 +1,4 @@
-package main
+package yootrack
 
 import "net/http"
 
